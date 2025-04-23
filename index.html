@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoDrugs | Drug Awareness Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            teal: '#0FF4C6',
+                            purple: '#8A2BE2',
+                            pink: '#FF1493',
+                            blue: '#36D1DC',
+                            red: '#FF3131'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { 
+                                textShadow: '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0FF4C6, 0 0 20px #0FF4C6',
+                                boxShadow: '0 0 5px #fff, 0 0 10px #0FF4C6, 0 0 15px #0FF4C6, 0 0 20px #0FF4C6'
+                            },
+                            '100%': { 
+                                textShadow: '0 0 10px #fff, 0 0 20px #fff, 0 0 30px #8A2BE2, 0 0 40px #8A2BE2',
+                                boxShadow: '0 0 10px #fff, 0 0 20px #8A2BE2, 0 0 30px #8A2BE2, 0 0 40px #8A2BE2'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0F0F1A;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .neon-text-teal {
+            color: #0FF4C6;
+        }
+        
+        .neon-text-purple {
+            color: #8A2BE2;
+            text-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+        }
+        
+        .neon-text-pink {
+            color: #FF1493;
+            text-shadow: 0 0 5px #FF1493, 0 0 10px #FF1493;
+        }
+        
+        .neon-border {
+            border: 2px solid #0FF4C6;
+            box-shadow: 0 0 5px #0FF4C6, 0 0 10px #0FF4C6;
+        }
+        
+        .neon-border-purple {
+            border: 2px solid #8A2BE2;
+            box-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+        }
+        
+        .neon-border-pink {
+            border: 2px solid #FF1493;
+            box-shadow: 0 0 5px #FF1493, 0 0 10px #FF1493;
+        }
+        
+        .neon-button {
+            position: relative;
+            display: inline-block;
+            padding: 15px 30px;
+            color: #0FF4C6;
+            font-size: 18px;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: 0.5s;
+            letter-spacing: 4px;
+            background: transparent;
+            border: none;
+        }
+        
+        .neon-button:hover {
+            background: #0FF4C6;
+            color: #050801;
+            box-shadow: 0 0 5px #0FF4C6;
+        }
+        
+        .neon-button span {
+            position: absolute;
+            display: block;
+        }
+        
+        .neon-button span:nth-child(1) {
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0FF4C6);
+            animation: btn-anim1 1s linear infinite;
+        }
+        
+        @keyframes btn-anim1 {
+            0% {
+                left: -100%;
+            }
+            50%, 100% {
+                left: 100%;
+            }
+        }
+        
+        .neon-button span:nth-child(2) {
+            top: -100%;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, #0FF4C6);
+            animation: btn-anim2 1s linear infinite;
+            animation-delay: 0.25s;
+        }
+        
+        @keyframes btn-anim2 {
+            0% {
+                top: -100%;
+            }
+            50%, 100% {
+                top: 100%;
+            }
+        }
+        
+        .neon-button span:nth-child(3) {
+            bottom: 0;
+            right: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(270deg, transparent, #0FF4C6);
+            animation: btn-anim3 1s linear infinite;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes btn-anim3 {
+            0% {
+                right: -100%;
+            }
+            50%, 100% {
+                right: 100%;
+            }
+        }
+        
+        .neon-button span:nth-child(4) {
+            bottom: -100%;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(360deg, transparent, #0FF4C6);
+            animation: btn-anim4 1s linear infinite;
+            animation-delay: 0.75s;
+        }
+        
+        @keyframes btn-anim4 {
+            0% {
+                bottom: -100%;
+            }
+            50%, 100% {
+                bottom: 100%;
+            }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0F0F1A 0%, #1A1A2E 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+        }
+        
+        .glass-effect {
+            background: rgba(15, 15, 26, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .drug-card {
+            transition: all 0.5s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .drug-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+        }
+        
+        @keyframes rotate {
+            100% {
+                transform: rotate(1turn);
+            }
+        }
+        
+        .drug-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #0FF4C6;
+        }
+        
+        #canvas-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(15, 15, 26, 0.9) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 15, 26, 0.9) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: center center;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #0FF4C6, #8A2BE2, #FF1493);
+            background-size: 200% 200%;
+            animation: gradient-animation 2s ease infinite;
+        }
+        
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #0FF4C6, #8A2BE2, #FF1493);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-animation 2s ease infinite;
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 15, 26, 0.95);
+            z-index: 100;
+            padding: 2rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            margin: 1rem 0;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        /* Responsive table styles */
+        @media (max-width: 768px) {
+            .responsive-table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        .hero-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            background: linear-gradient(45deg, #0FF4C6, #8A2BE2);
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 0 15px rgba(15, 244, 198, 0.5);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8A2BE2, #FF1493);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(15, 244, 198, 0.4);
+        }
+
+        .hero-button:hover::before {
+            opacity: 1;
+        }
+
+        .hero-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(15, 244, 198, 0.4);
+        }
+
+        @media (max-width: 640px) {
+            .hero-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold neon-text-teal font-orbitron">NoDrugs</span>
+                    </a>
+                    <div class="hidden md:ml-10 md:flex md:space-x-8">
+                        <a href="#home" class="text-white hover:text-neon-teal px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="#drugs" class="text-white hover:text-neon-purple px-3 py-2 text-sm font-medium">Drugs & Effects</a>
+                        <a href="#ranking" class="text-white hover:text-neon-pink px-3 py-2 text-sm font-medium">Danger Ranking</a>
+                        <a href="contact.html" class="text-white hover:text-neon-teal px-3 py-2 text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="#help" class="hero-button hidden md:inline-block">
+                        Get Help
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-white p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <button id="close-menu-button" class="absolute top-4 right-4 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <a href="#home" class="text-white hover:text-neon-teal font-medium">Home</a>
+        <a href="#drugs" class="text-white hover:text-neon-purple font-medium">Drugs & Effects</a>
+        <a href="#ranking" class="text-white hover:text-neon-pink font-medium">Danger Ranking</a>
+        <a href="contact.html" class="text-white hover:text-neon-teal font-medium">Contact</a>
+        <a href="#help" class="hero-button mt-6">
+            Get Help
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16 pb-8">
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="flex flex-col lg:grid lg:grid-cols-12 lg:gap-8">
+                <div class="text-center lg:col-span-6 lg:text-left flex flex-col justify-center items-center lg:items-start">
+                    <h1 class="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl font-orbitron">
+                        <span class="block neon-text-teal animate-pulse-slow">KNOW THE TRUTH</span>
+                        <span class="block text-gradient mt-3">SAY NO TO DRUGS</span>
+                    </h1>
+                    <p class="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl max-w-2xl">
+                        Knowledge is power. Our mission is to provide accurate information about drugs and their effects on the body and mind, helping you make informed decisions about your health.
+                    </p>
+                    <div class="mt-8 w-full flex justify-center lg:justify-start">
+                        <a href="#drugs" class="hero-button">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-12 lg:mt-0 lg:col-span-6 flex items-center justify-center">
+                    <div id="canvas-container" class="animate-float relative w-full h-[300px] sm:h-[400px]"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Animated background elements -->
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-neon-purple opacity-10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-teal opacity-10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+        <div class="absolute top-3/4 right-1/3 w-48 h-48 bg-neon-pink opacity-10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 relative overflow-hidden">
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:text-center">
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl font-orbitron">
+                    <span class="text-gradient">THE REALITY OF DRUG ABUSE</span>
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto">
+                    Understanding the scope of the problem is the first step toward finding solutions.
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:gap-x-8 md:gap-y-10">
+                    <div class="relative glass-effect p-6 rounded-xl card-hover">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-neon-teal text-white neon-border">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-white font-orbitron">Over 275 Million</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-300">
+                            People worldwide used drugs at least once in the past year.
+                        </dd>
+                    </div>
+
+                    <div class="relative glass-effect p-6 rounded-xl card-hover">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-neon-purple text-white neon-border-purple">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-white font-orbitron">36 Million</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-300">
+                            People suffer from drug use disorders globally.
+                        </dd>
+                    </div>
+
+                    <div class="relative glass-effect p-6 rounded-xl card-hover">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-neon-pink text-white neon-border-pink">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-white font-orbitron">500,000+</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-300">
+                            Deaths annually attributed to drug use worldwide.
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </section>
+
+    <!-- Drugs Information Section -->
+    <section id="drugs" class="py-12 relative overflow-hidden">
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-neon-teal font-semibold tracking-wide uppercase font-orbitron">Knowledge is Power</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl font-orbitron">
+                    <span class="text-gradient">UNDERSTANDING DIFFERENT DRUGS & THEIR EFFECTS</span>
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto">
+                    Learn about various substances and how they impact your body and mind.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Drug Card 1 -->
+                <div class="drug-card glass-effect rounded-xl overflow-hidden">
+                    <div class="px-6 py-8">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-neon-teal bg-opacity-20 rounded-md p-3">
+                                <svg class="h-8 w-8 text-neon-teal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <h3 class="text-xl leading-6 font-bold text-white font-orbitron">Opioids</h3>
+                                <p class="mt-2 text-sm text-gray-300">
+                                    Including heroin, fentanyl, and prescription painkillers
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-neon-teal font-orbitron">Effects on the Body:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Respiratory depression</li>
+                                <li>Extreme physical dependence</li>
+                                <li>Risk of fatal overdose</li>
+                                <li>Weakened immune system</li>
+                                <li>Gastrointestinal issues</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-neon-purple font-orbitron">Effects on the Mind:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Euphoria followed by severe depression</li>
+                                <li>Impaired judgment</li>
+                                <li>Psychological dependence</li>
+                                <li>Anxiety and paranoia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Card 2 -->
+                <div class="drug-card glass-effect rounded-xl overflow-hidden">
+                    <div class="px-6 py-8">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-neon-purple bg-opacity-20 rounded-md p-3">
+                                <svg class="h-8 w-8 text-neon-purple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <h3 class="text-xl leading-6 font-bold text-white font-orbitron">Stimulants</h3>
+                                <p class="mt-2 text-sm text-gray-300">
+                                    Including cocaine, methamphetamine, and MDMA
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-neon-teal font-orbitron">Effects on the Body:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Increased heart rate and blood pressure</li>
+                                <li>Hyperthermia (dangerously high body temperature)</li>
+                                <li>Cardiovascular complications</li>
+                                <li>Severe weight loss and malnutrition</li>
+                                <li>Dental problems ("meth mouth")</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-neon-purple font-orbitron">Effects on the Mind:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Intense euphoria followed by crash</li>
+                                <li>Psychosis and hallucinations</li>
+                                <li>Aggressive or violent behavior</li>
+                                <li>Severe anxiety and paranoia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Card 3 -->
+                <div class="drug-card glass-effect rounded-xl overflow-hidden">
+                    <div class="px-6 py-8">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-neon-pink bg-opacity-20 rounded-md p-3">
+                                <svg class="h-8 w-8 text-neon-pink" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <h3 class="text-xl leading-6 font-bold text-white font-orbitron">Hallucinogens</h3>
+                                <p class="mt-2 text-sm text-gray-300">
+                                    Including LSD, psilocybin, and PCP
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-neon-teal font-orbitron">Effects on the Body:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Increased heart rate and blood pressure</li>
+                                <li>Nausea and vomiting</li>
+                                <li>Loss of appetite</li>
+                                <li>Increased body temperature</li>
+                                <li>Impaired coordination</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-neon-purple font-orbitron">Effects on the Mind:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Hallucinations and sensory distortions</li>
+                                <li>Altered perception of time</li>
+                                <li>Risk of "bad trips" and psychosis</li>
+                                <li>Flashbacks (HPPD)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Card 4 -->
+                <div class="drug-card glass-effect rounded-xl overflow-hidden">
+                    <div class="px-6 py-8">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-neon-teal bg-opacity-20 rounded-md p-3">
+                                <svg class="h-8 w-8 text-neon-teal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <h3 class="text-xl leading-6 font-bold text-white font-orbitron">Depressants</h3>
+                                <p class="mt-2 text-sm text-gray-300">
+                                    Including alcohol, benzodiazepines, and barbiturates
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-neon-teal font-orbitron">Effects on the Body:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Respiratory depression</li>
+                                <li>Slowed heart rate</li>
+                                <li>Impaired coordination</li>
+                                <li>Risk of fatal withdrawal</li>
+                                <li>Liver damage (alcohol)</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-neon-purple font-orbitron">Effects on the Mind:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Reduced anxiety initially, increased long-term</li>
+                                <li>Impaired memory and cognition</li>
+                                <li>Depression</li>
+                                <li>Severe psychological dependence</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Card 5 -->
+                <div class="drug-card glass-effect rounded-xl overflow-hidden">
+                    <div class="px-6 py-8">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-neon-purple bg-opacity-20 rounded-md p-3">
+                                <svg class="h-8 w-8 text-neon-purple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <h3 class="text-xl leading-6 font-bold text-white font-orbitron">Cannabis</h3>
+                                <p class="mt-2 text-sm text-gray-300">
+                                    Including marijuana and synthetic cannabinoids
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-neon-teal font-orbitron">Effects on the Body:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Increased heart rate</li>
+                                <li>Respiratory issues (when smoked)</li>
+                                <li>Impaired coordination</li>
+                                <li>Potential lung damage</li>
+                                <li>Cannabinoid hyperemesis syndrome</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-neon-purple font-orbitron">Effects on the Mind:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Impaired memory and concentration</li>
+                                <li>Anxiety and paranoia (high doses)</li>
+                                <li>Potential trigger for psychosis in vulnerable individuals</li>
+                                <li>Amotivational syndrome with long-term use</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Card 6 -->
+                <div class="drug-card glass-effect rounded-xl overflow-hidden">
+                    <div class="px-6 py-8">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-neon-pink bg-opacity-20 rounded-md p-3">
+                                <svg class="h-8 w-8 text-neon-pink" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <h3 class="text-xl leading-6 font-bold text-white font-orbitron">Synthetic Drugs</h3>
+                                <p class="mt-2 text-sm text-gray-300">
+                                    Including bath salts, spice, and NBOMes
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-neon-teal font-orbitron">Effects on the Body:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Extreme hyperthermia</li>
+                                <li>Cardiovascular emergencies</li>
+                                <li>Kidney failure</li>
+                                <li>Seizures</li>
+                                <li>High risk of death</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-neon-purple font-orbitron">Effects on the Mind:</h4>
+                            <ul class="mt-2 text-sm text-gray-300 list-disc pl-5 space-y-1">
+                                <li>Extreme agitation and aggression</li>
+                                <li>Severe psychosis</li>
+                                <li>Suicidal thoughts</li>
+                                <li>Unpredictable and dangerous behavior</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Danger Ranking Section -->
+    <section id="ranking" class="py-12 relative overflow-hidden">
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-neon-pink font-semibold tracking-wide uppercase font-orbitron">Risk Assessment</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl font-orbitron">
+                    <span class="text-gradient">DANGER RANKING OF COMMON DRUGS</span>
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto">
+                    Based on physical harm, dependence potential, and social harm.
+                </p>
+            </div>
+
+            <div class="glass-effect rounded-xl overflow-hidden shadow-2xl">
+                <div class="responsive-table">
+                    <table class="min-w-full divide-y divide-gray-800">
+                        <thead class="bg-black bg-opacity-50">
+                            <tr>
+                                <th scope="col" class="py-4 px-6 text-left text-sm font-bold text-neon-teal font-orbitron">Rank</th>
+                                <th scope="col" class="py-4 px-6 text-left text-sm font-bold text-neon-teal font-orbitron">Drug</th>
+                                <th scope="col" class="py-4 px-6 text-left text-sm font-bold text-neon-teal font-orbitron">Physical Harm</th>
+                                <th scope="col" class="py-4 px-6 text-left text-sm font-bold text-neon-teal font-orbitron">Dependence</th>
+                                <th scope="col" class="py-4 px-6 text-left text-sm font-bold text-neon-teal font-orbitron">Social Harm</th>
+                                <th scope="col" class="py-4 px-6 text-left text-sm font-bold text-neon-teal font-orbitron">Overall Score</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800">
+                            
+                            <tr class="bg-neon-red bg-opacity-10 hover:bg-opacity-20 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">1</td>
+                                <td class="py-4 px-6 text-sm font-bold text-neon-pink font-orbitron">Heroin</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 98%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-bold text-neon-pink font-orbitron">94/100</td>
+                            </tr>
+                            <tr class="hover:bg-black hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">2</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Methamphetamine</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 89%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-teal font-orbitron">90/100</td>
+                            </tr>
+                            <tr class="bg-black bg-opacity-20 hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">3</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Fentanyl</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 98%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-purple font-orbitron">89/100</td>
+                            </tr>
+                            <tr class="hover:bg-black hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">4</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Cocaine</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 82%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-teal font-orbitron">85/100</td>
+                            </tr>
+                            <tr class="bg-black bg-opacity-20 hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">5</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Alcohol</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-purple font-orbitron">80/100</td>
+                            </tr>
+                            <tr class="hover:bg-black hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">6</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Benzodiazepines</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-teal font-orbitron">72/100</td>
+                            </tr>
+                            <tr class="bg-black bg-opacity-20 hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">7</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Synthetic Cannabinoids</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-purple font-orbitron">67/100</td>
+                            </tr>
+                            <tr class="hover:bg-black hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">8</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">MDMA (Ecstasy)</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 55%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-teal font-orbitron">62/100</td>
+                            </tr>
+                            <tr class="bg-black bg-opacity-20 hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">9</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Tobacco</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-purple font-orbitron">62/100</td>
+                            </tr>
+                            <tr class="hover:bg-black hover:bg-opacity-30 transition-all">
+                                <td class="py-4 px-6 text-sm font-medium text-white">10</td>
+                                <td class="py-4 px-6 text-sm font-medium text-white font-orbitron">Cannabis</td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 40%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm text-white">
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div class="progress-bar h-2.5 rounded-full" style="width: 45%"></div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-sm font-medium text-neon-teal font-orbitron">38/100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p class="mt-4 text-sm text-gray-400 italic text-center">
+                Note: This ranking is based on scientific research and expert consensus. Individual responses to drugs can vary, and any drug use carries risks.
+            </p>
+        </div>
+    </section>
+
+    <!-- Help Section -->
+    <section id="help" class="py-12 relative overflow-hidden">
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-neon-teal font-semibold tracking-wide uppercase font-orbitron">Get Help</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl font-orbitron">
+                    <span class="text-gradient">SUPPORT IS AVAILABLE</span>
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto">
+                    If you or someone you know is struggling with substance abuse, help is available.
+                </p>
+            </div>
+
+            <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+                <div class="glass-effect rounded-xl overflow-hidden shadow-2xl">
+                    <div class="px-6 py-8">
+                        <h3 class="text-xl leading-6 font-bold text-neon-teal font-orbitron">National Helpline</h3>
+                        <p class="mt-4 text-white">
+                            <a href="tel:1-800-662-4357" class="text-neon-pink text-2xl font-bold hover:text-neon-purple transition-colors">1-800-662-HELP (4357)</a>
+                        </p>
+                        <p class="mt-2 text-gray-300">
+                            Free, confidential, 24/7/365 treatment referral and information service (in English and Spanish) for individuals and families facing mental and/or substance use disorders.
+                        </p>
+                        
+                        <h3 class="text-xl leading-6 font-bold text-neon-teal font-orbitron mt-8">Crisis Text Line</h3>
+                        <p class="mt-4 text-white">
+                            Text <span class="font-bold">HOME</span> to <a href="sms:741741" class="text-neon-pink text-2xl font-bold hover:text-neon-purple transition-colors">741741</a>
+                        </p>
+                        <p class="mt-2 text-gray-300">
+                            Free 24/7 support for those in crisis. Text from anywhere in the USA to text with a trained Crisis Counselor.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-xl overflow-hidden shadow-2xl">
+                    <div class="px-6 py-8">
+                        <h3 class="text-xl leading-6 font-bold text-neon-purple font-orbitron">Online Resources</h3>
+                        <ul class="mt-4 text-gray-300 space-y-4">
+                            <li class="flex items-center">
+                                <svg class="h-5 w-5 text-neon-teal mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                <a href="#" class="text-white hover:text-neon-teal transition-colors">National Institute on Drug Abuse</a>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="h-5 w-5 text-neon-teal mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                <a href="#" class="text-white hover:text-neon-teal transition-colors">Substance Abuse and Mental Health Services Administration</a>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="h-5 w-5 text-neon-teal mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                <a href="#" class="text-white hover:text-neon-teal transition-colors">Centers for Disease Control and Prevention</a>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="h-5 w-5 text-neon-teal mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                <a href="#" class="text-white hover:text-neon-teal transition-colors">Partnership to End Addiction</a>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-8">
+                            <a href="contact.html" class="hero-button">
+                                Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-70 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+                <div class="space-y-8 xl:col-span-1">
+                    <span class="text-2xl font-bold neon-text-teal font-orbitron">NoDrugs</span>
+                    <p class="text-gray-300 text-base">
+                        Providing accurate information about drugs and their effects to help people make informed decisions about their health.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-neon-teal transition-colors">
+                            <span class="sr-only">Facebook</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-neon-purple transition-colors">
+                            <span class="sr-only">Instagram</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-neon-pink transition-colors">
+                            <span class="sr-only">Twitter</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-neon-teal tracking-wider uppercase font-orbitron">Resources</h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Educational Materials
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Research
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Statistics
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Prevention Programs
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-12 md:mt-0">
+                            <h3 class="text-sm font-semibold text-neon-purple tracking-wider uppercase font-orbitron">Support</h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-purple transition-colors">
+                                        Find Treatment
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-purple transition-colors">
+                                        Helplines
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-purple transition-colors">
+                                        Support Groups
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-purple transition-colors">
+                                        Recovery Resources
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-neon-pink tracking-wider uppercase font-orbitron">Organization</h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-pink transition-colors">
+                                        About Us
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-pink transition-colors">
+                                        Our Mission
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-pink transition-colors">
+                                        Partners
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-pink transition-colors">
+                                        Donate
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-12 md:mt-0">
+                            <h3 class="text-sm font-semibold text-neon-teal tracking-wider uppercase font-orbitron">Legal</h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Terms of Use
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Cookie Policy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-neon-teal transition-colors">
+                                        Disclaimer
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-800 pt-8">
+                <p class="text-base text-gray-400 xl:text-center">
+                    &copy; 2025 NoDrugs. All rights reserved. This website is for educational purposes only.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenuButton = document.getElementById('close-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.add('active');
+            });
+            
+            closeMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+            
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+            
+            // 3D Animation for Hero Section
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create a pill capsule
+            const createPill = (color) => {
+                const pillGroup = new THREE.Group();
+                
+                // Pill body (cylinder)
+                const geometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
+                const material = new THREE.MeshPhongMaterial({ 
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.5,
+                    shininess: 100
+                });
+                const cylinder = new THREE.Mesh(geometry, material);
+                
+                // Pill caps (spheres)
+                const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                const sphere1 = new THREE.Mesh(sphereGeometry, material);
+                sphere1.position.y = 1;
+                
+                const sphere2 = new THREE.Mesh(sphereGeometry, material);
+                sphere2.position.y = -1;
+                
+                pillGroup.add(cylinder);
+                pillGroup.add(sphere1);
+                pillGroup.add(sphere2);
+                
+                return pillGroup;
+            };
+            
+            // Create a warning symbol
+            const createWarningSymbol = () => {
+                const warningGroup = new THREE.Group();
+                
+                // Triangle
+                const triangleShape = new THREE.Shape();
+                triangleShape.moveTo(0, 1.5);
+                triangleShape.lineTo(-1.5, -1);
+                triangleShape.lineTo(1.5, -1);
+                triangleShape.lineTo(0, 1.5);
+                
+                const triangleGeometry = new THREE.ShapeGeometry(triangleShape);
+                const triangleMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFF1493,
+                    emissive: 0xFF1493,
+                    emissiveIntensity: 0.5,
+                    shininess: 100,
+                    side: THREE.DoubleSide
+                });
+                const triangle = new THREE.Mesh(triangleGeometry, triangleMaterial);
+                
+                // Exclamation mark
+                const exclamationGeometry = new THREE.BoxGeometry(0.2, 0.8, 0.1);
+                const exclamationMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFFFFF,
+                    emissive: 0xFFFFFF,
+                    emissiveIntensity: 0.5
+                });
+                const exclamation1 = new THREE.Mesh(exclamationGeometry, exclamationMaterial);
+                exclamation1.position.y = -0.1;
+                
+                const dotGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.1);
+                const exclamation2 = new THREE.Mesh(dotGeometry, exclamationMaterial);
+                exclamation2.position.y = -0.7;
+                
+                warningGroup.add(triangle);
+                warningGroup.add(exclamation1);
+                warningGroup.add(exclamation2);
+                
+                return warningGroup;
+            };
+            
+            // Create a molecule structure
+            const createMolecule = () => {
+                const moleculeGroup = new THREE.Group();
+                
+                // Atoms
+                const atomGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+                const atomMaterials = [
+                    new THREE.MeshPhongMaterial({ 
+                        color: 0x0FF4C6,
+                        emissive: 0x0FF4C6,
+                        emissiveIntensity: 0.5,
+                        shininess: 100
+                    }),
+                    new THREE.MeshPhongMaterial({ 
+                        color: 0x8A2BE2,
+                        emissive: 0x8A2BE2,
+                        emissiveIntensity: 0.5,
+                        shininess: 100
+                    }),
+                    new THREE.MeshPhongMaterial({ 
+                        color: 0xFF1493,
+                        emissive: 0xFF1493,
+                        emissiveIntensity: 0.5,
+                        shininess: 100
+                    })
+                ];
+                
+                // Create atoms in a structure
+                const positions = [
+                    [0, 0, 0],
+                    [1, 1, 0],
+                    [-1, 1, 0],
+                    [0, -1, 1],
+                    [0, -1, -1]
+                ];
+                
+                const atoms = [];
+                
+                positions.forEach((pos, i) => {
+                    const atom = new THREE.Mesh(atomGeometry, atomMaterials[i % 3]);
+                    atom.position.set(pos[0], pos[1], pos[2]);
+                    moleculeGroup.add(atom);
+                    atoms.push(atom);
+                });
+                
+                // Create bonds (cylinders) between atoms
+                const bondGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+                const bondMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFFFFF,
+                    emissive: 0xFFFFFF,
+                    emissiveIntensity: 0.3,
+                    shininess: 100
+                });
+                
+                // Connect center atom to all others
+                for (let i = 1; i < atoms.length; i++) {
+                    const start = atoms[0].position;
+                    const end = atoms[i].position;
+                    
+                    // Calculate the midpoint and length
+                    const midpoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+                    const length = start.distanceTo(end);
+                    
+                    // Create the bond cylinder
+                    const bond = new THREE.Mesh(bondGeometry, bondMaterial);
+                    bond.position.copy(midpoint);
+                    
+                    // Orient the cylinder to point from start to end
+                    bond.lookAt(end);
+                    bond.rotateX(Math.PI / 2);
+                    
+                    // Scale the cylinder to the correct length
+                    bond.scale.set(1, length, 1);
+                    
+                    moleculeGroup.add(bond);
+                }
+                
+                return moleculeGroup;
+            };
+            
+            // Add objects to scene
+            const pill1 = createPill(0x0FF4C6);
+            pill1.position.set(-2, 0, 0);
+            pill1.rotation.x = Math.PI / 4;
+            scene.add(pill1);
+            
+            const pill2 = createPill(0x8A2BE2);
+            pill2.position.set(2, 0, 0);
+            pill2.rotation.z = Math.PI / 4;
+            scene.add(pill2);
+            
+            const warningSymbol = createWarningSymbol();
+            warningSymbol.position.set(0, 1.5, 0);
+            warningSymbol.scale.set(0.8, 0.8, 0.8);
+            scene.add(warningSymbol);
+            
+            const molecule = createMolecule();
+            molecule.position.set(0, -1.5, 0);
+            molecule.scale.set(1.2, 1.2, 1.2);
+            scene.add(molecule);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight1 = new THREE.DirectionalLight(0x0FF4C6, 1);
+            directionalLight1.position.set(1, 1, 1);
+            scene.add(directionalLight1);
+            
+            const directionalLight2 = new THREE.DirectionalLight(0x8A2BE2, 1);
+            directionalLight2.position.set(-1, -1, -1);
+            scene.add(directionalLight2);
+            
+            const directionalLight3 = new THREE.DirectionalLight(0xFF1493, 1);
+            directionalLight3.position.set(0, 1, -1);
+            scene.add(directionalLight3);
+            
+            camera.position.z = 5;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                pill1.rotation.x += 0.01;
+                pill1.rotation.y += 0.01;
+                
+                pill2.rotation.y += 0.01;
+                pill2.rotation.z += 0.01;
+                
+                warningSymbol.rotation.y += 0.01;
+                
+                molecule.rotation.x += 0.005;
+                molecule.rotation.y += 0.005;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
